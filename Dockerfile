@@ -1,11 +1,19 @@
-FROM 2.7.4-alpine3.13
+FROM ruby:2.7.5-slim-buster
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
-RUN apk add --update --no-cache shared-mime-info
-RUN apk add git build-base ruby-dev linux-headers libc-dev libxml2-dev libxslt-dev sqlite-dev nodejs-current yarn tzdata postgresql-dev imagemagick6 imagemagick6-c++ imagemagick6-dev imagemagick6-libs ruby-rmagick
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends curl sudo
+RUN apt-get install -y --no-install-recommends git g++ libpq-dev libsqlite3-dev libtool make shared-mime-info ruby-mimemagic ruby-nio4r automake autoconf ruby-dev libev-dev python3 libc-dev libxml2-dev libxslt-dev sqlite3 yarn tzdata postgresql
+RUN curl -fsSL https://deb.nodesource.com/setup_12.x | bash -
+RUN sudo apt-get install -y nodejs
 
-RUN gem install rails -v 6.1.3 --no-document
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN sudo apt-get update
+RUN sudo apt-get install -y --no-install-recommends yarn
+
+RUN gem install rails -v 6.1.5 --no-document
 ADD . $APP_HOME

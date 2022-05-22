@@ -1,7 +1,8 @@
 version: '3'
+
 services:
   db:
-    image: postgres
+    image: postgres:13.4-alpine
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     ports:
@@ -9,6 +10,8 @@ services:
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
       POSTGRES_PASSWORD: "postgres"
+    networks:
+      - web
   web:
     build: .
     command: tail -f /dev/null
@@ -19,3 +22,21 @@ services:
       - "8080:8080"
     depends_on:
       - db
+      - chrome
+    networks:
+      - web
+  chrome:
+    image: selenium/standalone-chrome:101.0
+    container_name: chrome
+    volumes:
+      - /dev/shm:/dev/shm
+    ports:
+      - 4444:4444
+      - 5900:5900
+      - 7900:7900
+    networks:
+      - web
+networks:
+    web:
+      external: true
+      driver:  bridge
