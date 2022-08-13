@@ -1,4 +1,4 @@
-FROM ruby:2.7.5-slim-buster
+FROM ruby:2.7.6-slim-bullseye
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
@@ -15,5 +15,5 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/so
 RUN sudo apt-get update
 RUN sudo apt-get install -y --no-install-recommends yarn
 
-RUN gem install rails -v 6.1.5 --no-document
+RUN gem install rails -v 6.1.6.1 --no-document
 ADD . $APP_HOME
